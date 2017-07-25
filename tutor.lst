@@ -1,0 +1,636 @@
+     1                                  SECTION .data
+     2                                  	SYS_EXIT_PROGRAM  	equ 1
+     3                                  	SYS_STANDARD_OUTPUT equ 1
+     4                                  	SYS_STANDARD_INPUT 	equ 2
+     5                                  	SYS_READ_FILE  		equ 3
+     6                                  	SYS_WRITE_FILE 		equ 4
+     7                                  	SYSTEM_CALL 		equ 0x80
+     8                                  
+     9 00000000 0A005455544F522044-     	mensagemUm: db '',10,0,		'TUTOR DE TRUCO',10,0,		'Desenvolvido pelos alunos:',10,0,		'Eduardo Henrique Cruz | Matricula 258635',10,0,		'Lucas Matheus Dorada Marcílio | Matricula 258918',10,0,10,0
+    10 00000009 4520545255434F0A00-
+    11 00000012 446573656E766F6C76-
+    12 0000001B 69646F2070656C6F73-
+    13 00000024 20616C756E6F733A0A-
+    14 0000002D 004564756172646F20-
+    15 00000036 48656E726971756520-
+    16 0000003F 4372757A207C204D61-
+    17 00000048 74726963756C612032-
+    18 00000051 35383633350A004C75-
+    19 0000005A 636173204D61746865-
+    20 00000063 757320446F72616461-
+    21 0000006C 204D617263C3AD6C69-
+    22 00000075 6F207C204D61747269-
+    23 0000007E 63756C612032353839-
+    24 00000087 31380A000A00       
+    25                                  	tamanhoMensagemUm: equ $-mensagemUm
+    26                                  
+    27 0000008D 34353637716A6B6132-     	cartas: db '4567qjka23s',0
+    28 00000096 337300             
+    29 00000099 6F6563707300            	naipes: db 'oecps',0
+    30                                  
+    31 0000009F 4F50C387C395455320-     	mensagemCartas: db 'OPÇÕES DE CARTAS',10,0, 		'4- Quatro',10,0, 		'5- Cinco',10,0, 		'6- Seis',10,0, 		'7- Sete',10,0, 		'Q- Dama',10,0, 		'J- Valete',10,0, 		'K- Rei',10,0, 		'A- Ás',10,0, 		'2- Dois',10,0, 		'
+    32 000000A8 444520434152544153-
+    33 000000B1 0A00342D2051756174-
+    34 000000BA 726F0A00352D204369-
+    35 000000C3 6E636F0A00362D2053-
+    36 000000CC 6569730A00372D2053-
+    37 000000D5 6574650A00512D2044-
+    38 000000DE 616D610A004A2D2056-
+    39 000000E7 616C6574650A004B2D-
+    40 000000F0 205265690A00412D20-
+    41 000000F9 C381730A00322D2044-
+    42 00000102 6F69730A00332D2054-
+    43 0000010B 72C3AA730A00532D20-
+    44 00000114 534149520A00446967-
+    45 0000011D 697465206F2076616C-
+    46 00000126 6F7220646120636172-
+    47 0000012F 74612076697261206F-
+    48 00000138 75205B535D20706172-
+    49 00000141 6120736169723A2000 
+    50                                  	tamanhoMensagemCartas: equ $-mensagemCartas
+    51                                  
+    52 0000014A 4F50C387C395455320-     	mensagemNaipe: db 'OPÇÕES DE NAIPES',10,0, 		'O- Ouros',10,0, 		'E- Espadas',10,0, 		'C- Copas',10,0, 		'P- Paus',10,0, 		'S- SAIR',10,0, 		'Digite o valor do naipe da carta vira ou [S] para sair: ',0
+    53 00000153 4445204E4149504553-
+    54 0000015C 0A004F2D204F75726F-
+    55 00000165 730A00452D20457370-
+    56 0000016E 616461730A00432D20-
+    57 00000177 436F7061730A00502D-
+    58 00000180 20506175730A00532D-
+    59 00000189 20534149520A004469-
+    60 00000192 67697465206F207661-
+    61 0000019B 6C6F7220646F206E61-
+    62 000001A4 697065206461206361-
+    63 000001AD 727461207669726120-
+    64 000001B6 6F75205B535D207061-
+    65 000001BF 726120736169723A20-
+    66 000001C8 00                 
+    67                                  	tamanhoMensagemNaipes: equ $-mensagemNaipe
+    68                                  
+    69 000001C9 0A004F2076616C6F72-     	mensagemCartaInvalida: db '',10,0,		'O valor da carta digitada é inválido, tente novamente!',10,0
+    70 000001D2 206461206361727461-
+    71 000001DB 206469676974616461-
+    72 000001E4 20C3A920696E76C3A1-
+    73 000001ED 6C69646F2C2074656E-
+    74 000001F6 7465206E6F76616D65-
+    75 000001FF 6E7465210A00       
+    76                                  	tamanhoCartaInvalida: equ $-mensagemCartaInvalida
+    77                                  
+    78 00000205 0A004F2076616C6F72-     	mensagemNaipeInvalido: db '',10,0,		'O valor do naipe digitado é inválido, tente novamente!',10,0
+    79 0000020E 20646F206E61697065-
+    80 00000217 20646967697461646F-
+    81 00000220 20C3A920696E76C3A1-
+    82 00000229 6C69646F2C2074656E-
+    83 00000232 7465206E6F76616D65-
+    84 0000023B 6E7465210A00       
+    85                                  	tamanhoNaipeInvalido: equ $-mensagemNaipeInvalido
+    86                                  
+    87 00000241 0A00446573656A6120-     	mensagemContinuar: db '',10,0,		'Deseja continuar?[S/n]: ',0
+    88 0000024A 636F6E74696E756172-
+    89 00000253 3F5B532F6E5D3A2000 
+    90                                  	tamanhoMensagemContinuar: equ $-mensagemContinuar
+    91                                  
+    92 0000025C 342064652000            	quatro: db '4 de ',0
+    93                                  	tamanhoQuatro: equ $-quatro
+    94 00000262 352064652000            	cinco: db '5 de ',0
+    95                                  	tamanhoCinco: equ $-cinco
+    96 00000268 362064652000            	seis: db '6 de ',0
+    97                                  	tamanhoSeis: equ $-seis
+    98 0000026E 372064652000            	seven: db '7 de ',0
+    99                                  	tamanhoSeven: equ $-seven
+   100 00000274 64616D612064652000      	dama: db 'dama de ',0
+   101                                  	tamanhoDama: equ $-dama
+   102 0000027D 76616C657465206465-     	valete: db 'valete de ',0
+   103 00000286 2000               
+   104                                  	tamanhoValete: equ $-valete
+   105 00000288 7265692064652000        	rei: db 'rei de ',0
+   106                                  	tamanhoRei: equ $-rei
+   107 00000290 C3A1732064652000        	as: db 'ás de ',0
+   108                                  	tamanhoAs: equ $-as
+   109 00000298 322064652000            	dois: db '2 de ',0
+   110                                  	tamanhoDois: equ $-dois
+   111 0000029E 332064652000            	tres: db '3 de ',0
+   112                                  	tamanhoTres: equ $-tres
+   113                                  	
+   114 000002A4 6F75726F7300            	ouro: db 'ouros',0
+   115                                  	tamanhoOuro: equ $-ouro
+   116 000002AA 6573706164617300        	espada: db 'espadas',0
+   117                                  	tamanhoEspada: equ $-espada
+   118 000002B2 636F70617300            	copas: db 'copas',0
+   119                                  	tamanhoCopas: equ $-copas
+   120 000002B8 7061757300              	paus: db 'paus',0
+   121                                  	tamanhoPaus: equ $-paus
+   122                                  
+   123 000002BD 2C2000                  	virgula: db ', ',0
+   124                                  	tamanhoVirgula: equ $-virgula
+   125                                  
+   126 000002C0 2C0A00                  	virgulaQuebraLinha: db ',',10,0
+   127                                  	tamanhoVirgulaQLinha: equ $-virgulaQuebraLinha
+   128                                  
+   129 000002C3 2E0A00                  	ponto: db '.',10,0
+   130                                  	tamanhoPonto: equ $-ponto
+   131                                  
+   132 000002C6 0A00                    	quebraLinha: db '',10,0
+   133                                  	tamanhoQuebraLinha: equ $-quebraLinha
+   134                                  SECTION .bss
+   135 00000000 <res 00000002>          	opcao: resb 2
+   136 00000002 <res 00000002>          	c: resb 2
+   137 00000004 <res 00000002>          	n: resb 2
+   138 00000006 <res 00000004>          	cartaDigitada: resb 4
+   139 0000000A <res 00000004>          	naipeDigitado: resb 4
+   140 0000000E <res 00000004>          	vira: resb 4
+   141 00000012 <res 00000004>          	tamanhoVira: resb 4
+   142 00000016 <res 00000004>          	manilha: resb 4
+   143 0000001A <res 00000004>          	tamanhoManilha: resb 4
+   144                                  SECTION .text
+   145                                  	GLOBAL _start
+   146                                  ;*********************
+   147                                  ; Procedimento que exibe ao usuario
+   148                                  ; uma carta com os 4 naipes(4 cartas)
+   149                                  ;*********************
+   150                                  exibecarta:
+   151 00000000 89F1                    	mov ecx,esi
+   152 00000002 89FA                    	mov edx,edi
+   153 00000004 E859020000              	call exibemensagem
+   154 00000009 B9[A4020000]            	mov ecx,ouro
+   155 0000000E BA06000000              	mov edx,tamanhoOuro
+   156 00000013 E84A020000              	call exibemensagem
+   157 00000018 B9[BD020000]            	mov ecx,virgula
+   158 0000001D BA03000000              	mov edx,tamanhoVirgula
+   159 00000022 E83B020000              	call exibemensagem
+   160                                  
+   161 00000027 89F1                    	mov ecx,esi
+   162 00000029 89FA                    	mov edx,edi
+   163 0000002B E832020000              	call exibemensagem
+   164 00000030 B9[AA020000]            	mov ecx,espada
+   165 00000035 BA08000000              	mov edx,tamanhoEspada
+   166 0000003A E823020000              	call exibemensagem
+   167 0000003F B9[BD020000]            	mov ecx,virgula
+   168 00000044 BA03000000              	mov edx,tamanhoVirgula
+   169 00000049 E814020000              	call exibemensagem
+   170                                  
+   171 0000004E 89F1                    	mov ecx,esi
+   172 00000050 89FA                    	mov edx,edi
+   173 00000052 E80B020000              	call exibemensagem
+   174 00000057 B9[B2020000]            	mov ecx,copas
+   175 0000005C BA06000000              	mov edx,tamanhoCopas
+   176 00000061 E8FC010000              	call exibemensagem
+   177 00000066 B9[BD020000]            	mov ecx,virgula
+   178 0000006B BA03000000              	mov edx,tamanhoVirgula
+   179 00000070 E8ED010000              	call exibemensagem
+   180                                  
+   181 00000075 89F1                    	mov ecx,esi
+   182 00000077 89FA                    	mov edx,edi
+   183 00000079 E8E4010000              	call exibemensagem
+   184 0000007E B9[B8020000]            	mov ecx,paus
+   185 00000083 BA05000000              	mov edx,tamanhoPaus
+   186 00000088 E8D5010000              	call exibemensagem
+   187 0000008D B9[C0020000]            	mov ecx,virgulaQuebraLinha
+   188 00000092 BA03000000              	mov edx,tamanhoVirgulaQLinha
+   189 00000097 E8C6010000              	call exibemensagem
+   190 0000009C C3                      	ret
+   191                                  ;*********************
+   192                                  ; Procedimento que exibe ao usuario
+   193                                  ; a sequência de cartas excluindo a vira(3 cartas)
+   194                                  ;*********************
+   195                                  exibevira:
+   196 0000009D A0[0A000000]            	mov al,BYTE[naipeDigitado]
+   197 000000A2 3805[99000000]          	cmp [naipes],al
+   198 000000A8 7502                    	jne exibeouro
+   199 000000AA EB2F                    	jmp comparacaoUm
+   200                                  	exibeouro:
+   201 000000AC 8B0D[0E000000]          	mov ecx,[vira]
+   202 000000B2 8B15[12000000]          	mov edx,[tamanhoVira]
+   203 000000B8 E8A5010000              	call exibemensagem
+   204 000000BD B9[A4020000]            	mov ecx,ouro
+   205 000000C2 BA06000000              	mov edx,tamanhoOuro
+   206 000000C7 E896010000              	call exibemensagem
+   207 000000CC B9[BD020000]            	mov ecx,virgula
+   208 000000D1 BA03000000              	mov edx,tamanhoVirgula
+   209 000000D6 E887010000              	call exibemensagem
+   210                                  
+   211                                  	comparacaoUm:
+   212 000000DB A0[0A000000]            	mov al,BYTE[naipeDigitado]
+   213 000000E0 3805[9A000000]          	cmp [naipes+1],al
+   214 000000E6 7502                    	jne exibeespada
+   215 000000E8 EB2F                    	jmp comparacaoDois
+   216                                  	exibeespada:
+   217 000000EA 8B0D[0E000000]          	mov ecx,[vira]
+   218 000000F0 8B15[12000000]          	mov edx,[tamanhoVira]
+   219 000000F6 E867010000              	call exibemensagem
+   220 000000FB B9[AA020000]            	mov ecx,espada
+   221 00000100 BA08000000              	mov edx,tamanhoEspada
+   222 00000105 E858010000              	call exibemensagem
+   223 0000010A B9[BD020000]            	mov ecx,virgula
+   224 0000010F BA03000000              	mov edx,tamanhoVirgula
+   225 00000114 E849010000              	call exibemensagem
+   226                                  
+   227                                  	comparacaoDois:
+   228 00000119 A0[0A000000]            	mov al,BYTE[naipeDigitado]
+   229 0000011E 3805[9B000000]          	cmp [naipes+2],al
+   230 00000124 7502                    	jne exibecopas
+   231 00000126 EB2F                    	jmp comparacaoTres
+   232                                  	exibecopas:
+   233 00000128 8B0D[0E000000]          	mov ecx,[vira]
+   234 0000012E 8B15[12000000]          	mov edx,[tamanhoVira]
+   235 00000134 E829010000              	call exibemensagem
+   236 00000139 B9[B2020000]            	mov ecx,copas
+   237 0000013E BA06000000              	mov edx,tamanhoCopas
+   238 00000143 E81A010000              	call exibemensagem
+   239 00000148 B9[BD020000]            	mov ecx,virgula
+   240 0000014D BA03000000              	mov edx,tamanhoVirgula
+   241 00000152 E80B010000              	call exibemensagem
+   242                                  
+   243                                  	comparacaoTres:
+   244 00000157 A0[0A000000]            	mov al,BYTE[naipeDigitado]
+   245 0000015C 3805[9C000000]          	cmp [naipes+3],al
+   246 00000162 7502                    	jne exibepaus
+   247 00000164 EB2F                    	jmp qlinha
+   248                                  	exibepaus:
+   249 00000166 8B0D[0E000000]          	mov ecx,[vira]
+   250 0000016C 8B15[12000000]          	mov edx,[tamanhoVira]
+   251 00000172 E8EB000000              	call exibemensagem
+   252 00000177 B9[B8020000]            	mov ecx,paus
+   253 0000017C BA05000000              	mov edx,tamanhoPaus
+   254 00000181 E8DC000000              	call exibemensagem
+   255 00000186 B9[BD020000]            	mov ecx,virgula
+   256 0000018B BA03000000              	mov edx,tamanhoVirgula
+   257 00000190 E8CD000000              	call exibemensagem
+   258                                  
+   259                                  	qlinha:;quebra linha
+   260 00000195 B9[C6020000]            	mov ecx,quebraLinha
+   261 0000019A BA02000000              	mov edx,tamanhoQuebraLinha
+   262 0000019F E8BE000000              	call exibemensagem
+   263 000001A4 C3                      	ret
+   264                                  ;*********************
+   265                                  ; Procedimento que exibe ao usuario
+   266                                  ; a carta manilha(4 cartas)
+   267                                  ;*********************
+   268                                  exibemanilha:
+   269                                  	;ouro
+   270 000001A5 8B0D[16000000]          	mov ecx,[manilha]
+   271 000001AB 8B15[1A000000]          	mov edx,[tamanhoManilha]
+   272 000001B1 E8AC000000              	call exibemensagem
+   273 000001B6 B9[A4020000]            	mov ecx,ouro
+   274 000001BB BA06000000              	mov edx,tamanhoOuro
+   275 000001C0 E89D000000              	call exibemensagem
+   276 000001C5 B9[C0020000]            	mov ecx,virgulaQuebraLinha
+   277 000001CA BA03000000              	mov edx,tamanhoVirgulaQLinha
+   278 000001CF E88E000000              	call exibemensagem
+   279                                  	;espada
+   280 000001D4 8B0D[16000000]          	mov ecx,[manilha]
+   281 000001DA 8B15[1A000000]          	mov edx,[tamanhoManilha]
+   282 000001E0 E87D000000              	call exibemensagem
+   283 000001E5 B9[AA020000]            	mov ecx,espada
+   284 000001EA BA08000000              	mov edx,tamanhoEspada
+   285 000001EF E86E000000              	call exibemensagem
+   286 000001F4 B9[C0020000]            	mov ecx,virgulaQuebraLinha
+   287 000001F9 BA03000000              	mov edx,tamanhoVirgulaQLinha
+   288 000001FE E85F000000              	call exibemensagem
+   289                                  	;copas
+   290 00000203 8B0D[16000000]          	mov ecx,[manilha]
+   291 00000209 8B15[1A000000]          	mov edx,[tamanhoManilha]
+   292 0000020F E84E000000              	call exibemensagem
+   293 00000214 B9[B2020000]            	mov ecx,copas
+   294 00000219 BA06000000              	mov edx,tamanhoCopas
+   295 0000021E E83F000000              	call exibemensagem
+   296 00000223 B9[C0020000]            	mov ecx,virgulaQuebraLinha
+   297 00000228 BA03000000              	mov edx,tamanhoVirgulaQLinha
+   298 0000022D E830000000              	call exibemensagem
+   299                                  	;paus
+   300 00000232 8B0D[16000000]          	mov ecx,[manilha]
+   301 00000238 8B15[1A000000]          	mov edx,[tamanhoManilha]
+   302 0000023E E81F000000              	call exibemensagem
+   303 00000243 B9[B8020000]            	mov ecx,paus
+   304 00000248 BA05000000              	mov edx,tamanhoPaus
+   305 0000024D E810000000              	call exibemensagem
+   306 00000252 B9[C3020000]            	mov ecx,ponto
+   307 00000257 BA03000000              	mov edx,tamanhoPonto
+   308 0000025C E801000000              	call exibemensagem
+   309 00000261 C3                      	ret
+   310                                  ;*********************
+   311                                  ; Procedimento que exibe algo na tela do usuario
+   312                                  ;*********************
+   313                                  exibemensagem:
+   314 00000262 B804000000              	mov eax,SYS_WRITE_FILE
+   315 00000267 BB01000000              	mov ebx,SYS_STANDARD_OUTPUT
+   316 0000026C CD80                    	int SYSTEM_CALL
+   317 0000026E C3                      	ret
+   318                                  ;*********************
+   319                                  ; Guarda o valor da carta vira e o valor da manilha
+   320                                  ;*********************
+   321                                  definacarta:
+   322 0000026F 8915[1A000000]          	mov [tamanhoManilha],edx
+   323 00000275 890D[16000000]          	mov [manilha],ecx
+   324 0000027B 891D[12000000]          	mov [tamanhoVira],ebx
+   325 00000281 A3[0E000000]            	mov [vira],eax
+   326 00000286 A2[06000000]            	mov BYTE[cartaDigitada],al
+   327 0000028B C3                      	ret
+   328                                  _start:
+   329 0000028C B804000000              	mov eax,SYS_WRITE_FILE
+   330 00000291 BB01000000              	mov ebx,SYS_STANDARD_OUTPUT
+   331 00000296 B9[00000000]            	mov ecx,mensagemUm
+   332 0000029B BA8D000000              	mov edx,tamanhoMensagemUm
+   333 000002A0 CD80                    	int SYSTEM_CALL
+   334                                  pedecarta:
+   335 000002A2 B9[9F000000]            	mov ecx,mensagemCartas
+   336 000002A7 BAAB000000              	mov edx,tamanhoMensagemCartas
+   337 000002AC E8B1FFFFFF              	call exibemensagem
+   338                                  	
+   339 000002B1 B803000000              	mov eax,SYS_READ_FILE
+   340 000002B6 BB02000000              	mov ebx,SYS_STANDARD_INPUT
+   341 000002BB B9[02000000]            	mov ecx,c
+   342 000002C0 BA02000000              	mov edx,2
+   343 000002C5 CD80                    	int SYSTEM_CALL
+   344                                  	
+   345 000002C7 A0[02000000]            	mov al,[c]
+   346 000002CC 0C20                    	or al,0x20
+   347                                  	
+   348 000002CE 3805[8D000000]          	cmp [cartas],al;4
+   349 000002D4 0F848C000000            	je setaquatro
+   350 000002DA 3805[8E000000]          	cmp [cartas+1],al;5
+   351 000002E0 0F849E000000            	je setacinco
+   352 000002E6 3805[8F000000]          	cmp [cartas+2],al;6
+   353 000002EC 0F84B0000000            	je setaseis
+   354 000002F2 3805[90000000]          	cmp [cartas+3],al;7
+   355 000002F8 0F84C2000000            	je setasete
+   356 000002FE 3805[91000000]          	cmp [cartas+4],al;Q
+   357 00000304 0F84D4000000            	je setadama
+   358 0000030A 3805[92000000]          	cmp [cartas+5],al;J
+   359 00000310 0F84E6000000            	je setavalete
+   360 00000316 3805[93000000]          	cmp [cartas+6],al;K
+   361 0000031C 0F84F5000000            	je setarei
+   362 00000322 3805[94000000]          	cmp [cartas+7],al;A
+   363 00000328 0F8404010000            	je setaas
+   364 0000032E 3805[95000000]          	cmp [cartas+8],al;2
+   365 00000334 0F8413010000            	je setadois
+   366 0000033A 3805[96000000]          	cmp [cartas+9],al;3
+   367 00000340 0F8422010000            	je setatres
+   368 00000346 3805[97000000]          	cmp [cartas+10],al;SAIR
+   369 0000034C 0F8482030000            	je fim
+   370 00000352 B9[C9010000]            	mov ecx,mensagemCartaInvalida
+   371 00000357 BA3C000000              	mov edx,tamanhoCartaInvalida
+   372 0000035C E801FFFFFF              	call exibemensagem; caso o valor seja invalido, exibe uma mensagem de erro e
+   373 00000361 E93CFFFFFF              	jmp pedecarta ; volta a pedir uma carta novamente
+   374                                  	;**guarda o valor digitado, guarda a manilha e pede o naipe**
+   375                                  	setaquatro:; se o valor digitado for válido, amanzena o valor da carta vira e manilha
+   376 00000366 B8[5C020000]            	mov eax,quatro
+   377 0000036B BB06000000              	mov ebx,tamanhoQuatro
+   378 00000370 B9[62020000]            	mov ecx,cinco
+   379 00000375 BA06000000              	mov edx,tamanhoCinco
+   380 0000037A E8F0FEFFFF              	call definacarta; chama o procedimento
+   381 0000037F E9FF000000              	jmp pedenaipe
+   382                                  	setacinco:
+   383 00000384 B8[62020000]            	mov eax,cinco
+   384 00000389 BB06000000              	mov ebx,tamanhoCinco
+   385 0000038E B9[68020000]            	mov ecx,seis
+   386 00000393 BA06000000              	mov edx,tamanhoSeis
+   387 00000398 E8D2FEFFFF              	call definacarta
+   388 0000039D E9E1000000              	jmp pedenaipe
+   389                                  	setaseis:
+   390 000003A2 B8[68020000]            	mov eax,seis
+   391 000003A7 BB06000000              	mov ebx,tamanhoSeis
+   392 000003AC B9[6E020000]            	mov ecx,seven
+   393 000003B1 BA06000000              	mov edx,tamanhoSeven
+   394 000003B6 E8B4FEFFFF              	call definacarta
+   395 000003BB E9C3000000              	jmp pedenaipe
+   396                                  	setasete:
+   397 000003C0 B8[6E020000]            	mov eax,seven
+   398 000003C5 BB06000000              	mov ebx,tamanhoSeven
+   399 000003CA B9[74020000]            	mov ecx,dama
+   400 000003CF BA09000000              	mov edx,tamanhoDama
+   401 000003D4 E896FEFFFF              	call definacarta
+   402 000003D9 E9A5000000              	jmp pedenaipe
+   403                                  	setadama:
+   404 000003DE B8[74020000]            	mov eax,dama
+   405 000003E3 BB09000000              	mov ebx,tamanhoDama
+   406 000003E8 B9[7D020000]            	mov ecx,valete
+   407 000003ED BA0B000000              	mov edx,tamanhoValete
+   408 000003F2 E878FEFFFF              	call definacarta
+   409 000003F7 E987000000              	jmp pedenaipe
+   410                                  	setavalete:
+   411 000003FC B8[7D020000]            	mov eax,valete
+   412 00000401 BB0B000000              	mov ebx,tamanhoValete
+   413 00000406 B9[88020000]            	mov ecx,rei
+   414 0000040B BA08000000              	mov edx,tamanhoRei
+   415 00000410 E85AFEFFFF              	call definacarta
+   416 00000415 EB6C                    	jmp pedenaipe
+   417                                  	setarei:
+   418 00000417 B8[88020000]            	mov eax,rei
+   419 0000041C BB08000000              	mov ebx,tamanhoRei
+   420 00000421 B9[90020000]            	mov ecx,as
+   421 00000426 BA08000000              	mov edx,tamanhoAs
+   422 0000042B E83FFEFFFF              	call definacarta
+   423 00000430 EB51                    	jmp pedenaipe
+   424                                  	setaas:
+   425 00000432 B8[90020000]            	mov eax,as
+   426 00000437 BB08000000              	mov ebx,tamanhoAs
+   427 0000043C B9[98020000]            	mov ecx,dois
+   428 00000441 BA06000000              	mov edx,tamanhoDois
+   429 00000446 E824FEFFFF              	call definacarta
+   430 0000044B EB36                    	jmp pedenaipe
+   431                                  	setadois:
+   432 0000044D B8[98020000]            	mov eax,dois
+   433 00000452 BB06000000              	mov ebx,tamanhoDois
+   434 00000457 B9[9E020000]            	mov ecx,tres
+   435 0000045C BA06000000              	mov edx,tamanhoTres
+   436 00000461 E809FEFFFF              	call definacarta
+   437 00000466 EB1B                    	jmp pedenaipe
+   438                                  	setatres:
+   439 00000468 B8[9E020000]            	mov eax,tres
+   440 0000046D BB06000000              	mov ebx,tamanhoTres
+   441 00000472 B9[5C020000]            	mov ecx,quatro
+   442 00000477 BA06000000              	mov edx,tamanhoQuatro
+   443 0000047C E8EEFDFFFF              	call definacarta
+   444 00000481 EB00                    	jmp pedenaipe
+   445                                  pedenaipe:
+   446 00000483 B9[4A010000]            	mov ecx,mensagemNaipe
+   447 00000488 BA7F000000              	mov edx,tamanhoMensagemNaipes
+   448 0000048D E8D0FDFFFF              	call exibemensagem
+   449                                  	
+   450 00000492 B803000000              	mov eax,SYS_READ_FILE
+   451 00000497 BB02000000              	mov ebx,SYS_STANDARD_INPUT
+   452 0000049C B9[04000000]            	mov ecx,n
+   453 000004A1 BA02000000              	mov edx,2
+   454 000004A6 CD80                    	int SYSTEM_CALL
+   455                                  	
+   456 000004A8 A0[04000000]            	mov al,[n]
+   457 000004AD 0C20                    	or al,0x20
+   458                                  	
+   459 000004AF 3A05[99000000]          	cmp al,[naipes];ouro
+   460 000004B5 A2[0A000000]            	mov BYTE[naipeDigitado],al
+   461 000004BA 7444                    	je comparacao
+   462 000004BC 3A05[9A000000]          	cmp al,[naipes+1];espada
+   463 000004C2 A2[06000000]            	mov BYTE[cartaDigitada],al
+   464 000004C7 7437                    	je comparacao
+   465 000004C9 3A05[9B000000]          	cmp al,[naipes+2];copas
+   466 000004CF A2[06000000]            	mov BYTE[cartaDigitada],al
+   467 000004D4 742A                    	je comparacao
+   468 000004D6 3A05[9C000000]          	cmp al,[naipes+3];paus
+   469 000004DC A2[06000000]            	mov BYTE[cartaDigitada],al	
+   470 000004E1 741D                    	je comparacao
+   471 000004E3 3A05[9D000000]          	cmp al,[naipes+4];SAIR
+   472 000004E9 0F84E5010000            	je fim
+   473 000004EF B9[05020000]            	mov ecx,mensagemNaipeInvalido
+   474 000004F4 BA3C000000              	mov edx,tamanhoNaipeInvalido
+   475 000004F9 E864FDFFFF              	call exibemensagem
+   476 000004FE EB83                    	jmp pedenaipe
+   477                                  ;******************************
+   478                                  ; Compara as cartas para exibilas corrretamente
+   479                                  ;******************************
+   480                                  comparacao:
+   481 00000500 B9[C6020000]             	mov ecx,quebraLinha
+   482 00000505 BA02000000              	mov edx,tamanhoQuebraLinha
+   483 0000050A E853FDFFFF              	call exibemensagem
+   484                                  
+   485 0000050F A0[02000000]            	mov al,[c]
+   486 00000514 0C20                    	or al,0x20
+   487                                  	cartaquatro:
+   488 00000516 3805[8D000000]          	cmp [cartas],al
+   489 0000051C 7419                    	je cartaquatroVira ; se for igual é porque o 4 é vira
+   490                                  	; essa verificação somente acontece com a carta 4
+   491 0000051E 3805[96000000]          	cmp [cartas+9],al; verifica se o vira for 3 exibe o 4 apenas como manilha
+   492 00000524 7418                    	je cartacinco
+   493 00000526 BE[5C020000]            	mov esi,quatro ; exibe o 4 normalmente caso ele não seja manilha ou vira
+   494 0000052B BF06000000              	mov edi,tamanhoQuatro ; exibe o 4 normalmente caso ele não seja manilha ou vira
+   495 00000530 E8CBFAFFFF              	call exibecarta	; exibe o 4 normalmente caso ele não seja manilha ou vira
+   496 00000535 EB07                    	jmp cartacinco ; e pula para a pŕoxima verificação, no caso a carta 5
+   497                                  	cartaquatroVira: 
+   498 00000537 E861FBFFFF              	call exibevira ; exibe o 4 caso ele venha a ser carta vira
+   499 0000053C EB27                    	jmp cartaseis ;pula para a próxima verificação
+   500                                  	;as outras comparações fazem a mesma coisa
+   501                                  	
+   502                                  	cartacinco:
+   503 0000053E A0[02000000]            	mov al,[c]
+   504 00000543 0C20                    	or al,0x20
+   505 00000545 3805[8E000000]          	cmp [cartas+1],al
+   506 0000054B 7411                    	je cartacincovira
+   507 0000054D BE[62020000]            	mov esi,cinco
+   508 00000552 BF06000000              	mov edi,tamanhoCinco
+   509 00000557 E8A4FAFFFF              	call exibecarta	
+   510 0000055C EB07                    	jmp cartaseis
+   511                                  	cartacincovira:
+   512 0000055E E83AFBFFFF              	call exibevira
+   513 00000563 EB27                    	jmp cartasete
+   514                                  	
+   515                                  	cartaseis:
+   516 00000565 A0[02000000]            	mov al,[c]
+   517 0000056A 0C20                    	or al,0x20
+   518 0000056C 3805[8F000000]          	cmp [cartas+2],al
+   519 00000572 7411                    	je cartaseisvira
+   520 00000574 BE[68020000]            	mov esi,seis
+   521 00000579 BF06000000              	mov edi,tamanhoSeis
+   522 0000057E E87DFAFFFF              	call exibecarta
+   523 00000583 EB07                    	jmp cartasete
+   524                                  	cartaseisvira:
+   525 00000585 E813FBFFFF              	call exibevira
+   526 0000058A EB27                    	jmp cartadama
+   527                                  	
+   528                                  	cartasete:
+   529 0000058C A0[02000000]            	mov al,[c]
+   530 00000591 0C20                    	or al,0x20
+   531 00000593 3805[90000000]          	cmp [cartas+3],al
+   532 00000599 7411                    	je cartasetevira
+   533 0000059B BE[6E020000]            	mov esi,seven
+   534 000005A0 BF06000000              	mov edi,tamanhoSeven
+   535 000005A5 E856FAFFFF              	call exibecarta
+   536 000005AA EB07                    	jmp cartadama
+   537                                  	cartasetevira:
+   538 000005AC E8ECFAFFFF              	call exibevira
+   539 000005B1 EB27                    	jmp cartavalete
+   540                                  	
+   541                                  	cartadama:
+   542 000005B3 A0[02000000]            	mov al,[c]
+   543 000005B8 0C20                    	or al,0x20
+   544 000005BA 3805[91000000]          	cmp [cartas+4],al
+   545 000005C0 7411                    	je cartadamavira
+   546 000005C2 BE[74020000]            	mov esi,dama
+   547 000005C7 BF09000000              	mov edi,tamanhoDama
+   548 000005CC E82FFAFFFF              	call exibecarta
+   549 000005D1 EB07                    	jmp cartavalete
+   550                                  	cartadamavira:
+   551 000005D3 E8C5FAFFFF              	call exibevira
+   552 000005D8 EB27                    	jmp cartarei
+   553                                  	
+   554                                  	cartavalete:
+   555 000005DA A0[02000000]            	mov al,[c]
+   556 000005DF 0C20                    	or al,0x20
+   557 000005E1 3805[92000000]          	cmp [cartas+5],al
+   558 000005E7 7411                    	je cartavaletevira
+   559 000005E9 BE[7D020000]            	mov esi,valete
+   560 000005EE BF0B000000              	mov edi,tamanhoValete
+   561 000005F3 E808FAFFFF              	call exibecarta
+   562 000005F8 EB07                    	jmp cartarei
+   563                                  	cartavaletevira:
+   564 000005FA E89EFAFFFF              	call exibevira
+   565 000005FF EB27                    	jmp cartaas
+   566                                  	
+   567                                  	cartarei:
+   568 00000601 A0[02000000]            	mov al,[c]
+   569 00000606 0C20                    	or al,0x20
+   570 00000608 3805[93000000]          	cmp [cartas+6],al
+   571 0000060E 7411                    	je cartareivira
+   572 00000610 BE[88020000]            	mov esi,rei
+   573 00000615 BF08000000              	mov edi,tamanhoRei
+   574 0000061A E8E1F9FFFF              	call exibecarta
+   575 0000061F EB07                    	jmp cartaas
+   576                                  	cartareivira:
+   577 00000621 E877FAFFFF              	call exibevira
+   578 00000626 EB27                    	jmp cartadois
+   579                                  	
+   580                                  	cartaas:
+   581 00000628 A0[02000000]            	mov al,[c]
+   582 0000062D 0C20                    	or al,0x20
+   583 0000062F 3805[94000000]          	cmp [cartas+7],al
+   584 00000635 7411                    	je cartaasvira
+   585 00000637 BE[90020000]            	mov esi,as
+   586 0000063C BF08000000              	mov edi,tamanhoAs
+   587 00000641 E8BAF9FFFF              	call exibecarta
+   588 00000646 EB07                    	jmp cartadois
+   589                                  	cartaasvira:
+   590 00000648 E850FAFFFF              	call exibevira
+   591 0000064D EB27                    	jmp cartatres
+   592                                  	
+   593                                  	cartadois:
+   594 0000064F A0[02000000]            	mov al,[c]
+   595 00000654 0C20                    	or al,0x20
+   596 00000656 3805[95000000]          	cmp [cartas+8],al
+   597 0000065C 7411                    	je cartadoisvira
+   598 0000065E BE[98020000]            	mov esi,dois
+   599 00000663 BF06000000              	mov edi,tamanhoDois
+   600 00000668 E893F9FFFF              	call exibecarta
+   601 0000066D EB07                    	jmp cartatres
+   602                                  	cartadoisvira:
+   603 0000066F E829FAFFFF              	call exibevira
+   604 00000674 EB25                    	jmp cartamanilha
+   605                                  	
+   606                                  	cartatres:
+   607 00000676 A0[02000000]            	mov al,[c]
+   608 0000067B 0C20                    	or al,0x20
+   609 0000067D 3805[96000000]          	cmp [cartas+9],al
+   610 00000683 7411                    	je cartatresvira
+   611 00000685 BE[9E020000]            	mov esi,tres
+   612 0000068A BF06000000              	mov edi,tamanhoTres
+   613 0000068F E86CF9FFFF              	call exibecarta
+   614 00000694 EB05                    	jmp cartamanilha
+   615                                  	cartatresvira:
+   616 00000696 E802FAFFFF              	call exibevira
+   617                                  
+   618                                  	cartamanilha:
+   619 0000069B E805FBFFFF              	call exibemanilha
+   620                                  continuar:
+   621 000006A0 B9[41020000]            	mov ecx,mensagemContinuar
+   622 000006A5 BA1B000000              	mov edx,tamanhoMensagemContinuar
+   623 000006AA E8B3FBFFFF              	call exibemensagem
+   624 000006AF B803000000              	mov eax,SYS_READ_FILE
+   625 000006B4 BB02000000              	mov ebx,SYS_STANDARD_INPUT
+   626 000006B9 B9[00000000]            	mov ecx,opcao
+   627 000006BE BA02000000              	mov edx,2
+   628 000006C3 CD80                    	int SYSTEM_CALL
+   629 000006C5 A0[00000000]            	mov al,[opcao]
+   630 000006CA 0C20                    	or al,0x20
+   631 000006CC 3C73                    	cmp al,'s'
+   632 000006CE 0F84CEFBFFFF            	je pedecarta
+   633                                  fim:
+   634 000006D4 B801000000              	mov eax,SYS_EXIT_PROGRAM
+   635 000006D9 31DB                    	xor ebx,ebx
+   636 000006DB CD80                    	int SYSTEM_CALL
